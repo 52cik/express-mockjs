@@ -1,0 +1,17 @@
+!.gitignore
+
+# Dependency directory
+node_modules
+
+# windows thumbnail cache
+Thumbs.db
+Desktop.ini
+
+# Mac OS X DS_Store
+.DS_Store
+
+# webstorm
+.idea
+
+# Coverage directory
+coverage

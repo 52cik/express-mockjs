@@ -1,0 +1,30 @@
+{
+  "name": "express-mockjs",
+  "version": "0.1.0",
+  "description": "express mockjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/52cik/express-mockjs.git"
+  },
+  "keywords": [],
+  "author": "楼教主 <fe.52cik@gmail.com> (http://www.52cik.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/52cik/express-mockjs/issues"
+  },
+  "homepage": "https://github.com/52cik/express-mockjs#readme",
+  "dependencies": {
+    "mockjs": "^1.0.1-beta3",
+    "node-walkdir": "^0.1.0"
+  },
+  "devDependencies": {
+    "express": "^4.14.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.1.0",
+    "supertest": "^2.0.0"
+  }
+}
