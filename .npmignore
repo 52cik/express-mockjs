@@ -1,0 +1,6 @@
+.DS_Store
+.travis.yml
+
+node_modules
+test
+coverage
