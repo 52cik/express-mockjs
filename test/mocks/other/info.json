@@ -1,0 +1,17 @@
+/**
+ * other page - info
+ *
+ * @url /other-info
+ *
+ * Here you can write a detailed description
+ * of the parameters of the information.
+ */
+
+{
+  "code|1": [0, 0, 0, 0, 1],
+  "data": {
+    "id|+1": 1,
+    "title": "@title",
+    "content": "@paragraph"
+  }
+}

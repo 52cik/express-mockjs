@@ -1,0 +1,21 @@
+/**
+ * other page - info
+ *
+ * @url /other-list
+ *
+ * Here you can write a detailed description
+ * of the parameters of the information.
+ */
+
+{
+  "code|1": [0, 0, 0, 0, 1],
+  "data": {
+    "list|5": [
+      {
+        "id|+1": 1,
+        "title": "@title",
+        "content": "@paragraph"
+      }
+    ]
+  }
+}
