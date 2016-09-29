@@ -55,7 +55,7 @@ app.listen(8000);
         ├── data.json
 ```
 
-## data.json 文件数据规范
+## data.json
 
 `Mock JSON` here is not a real JSON file, and more like a JS file, so you want to use the following format.
 
