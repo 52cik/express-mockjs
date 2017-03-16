@@ -50,6 +50,7 @@ app.listen(8000);
     ├── home
     ⎪   ├── data.json
     ├── user
+    ⎪   ├── data.js
     ⎪   ├── data.json
     ├── game
         ├── data.json
