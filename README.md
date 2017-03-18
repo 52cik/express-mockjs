@@ -9,6 +9,7 @@
 [![license MIT][license-image]][license-url]
 
 
+
 ## How to use it
 
 ### Installation
@@ -17,24 +18,27 @@
 $ npm install --save-dev express-mockjs
 ```
 
+
 ### Examples
 
 ``` js
+var path = require('path')
 var express = require('express')
 var mockjs = require('express-mockjs')
 
 var app = express()
 
 // Using the default path /
-app.use(mockjs('./mocks'))
+app.use(mockjs(path.join(__dirname, 'mocks')))
 
 // or custom path /api
-app.use('/api', mockjs('./mocks'))
+app.use('/api', mockjs(path.join(__dirname, 'mocks')))
 
 // Add your middleware here, etc.
 
-app.listen(8000);
+app.listen(3000);
 ```
+
 
 ### Mock JSON
 
@@ -55,6 +59,8 @@ app.listen(8000);
     ├── game
         ├── data.json
 ```
+
+
 
 ## data.json
 
@@ -88,6 +94,63 @@ app.listen(8000);
 ```
 
 Then you can access the <http://localhost:3000/api/api-access-path> through the browser.
+
+Of course, you can also use the JS file directly.
+
+``` js
+/**
+ * home page links
+ *
+ * @url /home-links
+ *
+ * Here you can write a detailed description
+ * of the parameters of the information.
+ */
+
+module.exports = {
+  "code": function () { // simulation error code, 1/10 probability of error code 1.
+    return Math.random() < 0.1 ? 1 : 0;
+  },
+  "list|5-10": [
+    {"title": "@title", "link": "@url"}
+  ]
+};
+```
+
+Or export function.
+
+``` js
+/**
+ * user page - user info
+ *
+ * @url user?uid=233
+ *
+ * Here you can write a detailed description
+ * of the parameters of the information.
+ */
+
+module.exports = function (req) {
+  var uid = req.query.uid;
+
+  if (!uid) {
+    return {
+      code: -1,
+      msg: 'no uid',
+    }
+  }
+
+  return {
+    code: 0,
+    data: {
+      "uid": +uid,
+      "name": "@name",
+      "age|20-30": 1,
+      "email": "@email",
+      "date": "@date",
+    },
+  };
+};
+```
 
 
 

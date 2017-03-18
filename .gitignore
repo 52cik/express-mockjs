@@ -13,5 +13,11 @@ Desktop.ini
 # webstorm
 .idea
 
+.vscode
+
 # Coverage directory
 coverage
+
+yarn.lock
+
+app.js

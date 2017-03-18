@@ -1,5 +1,6 @@
 'use strict';
 
+var path = require('path');
 var express = require('express');
 var request = require('supertest');
 var mock = require('..');
@@ -10,7 +11,7 @@ describe('express mockjs test:', function () {
 
   describe('Basic testing.', function () {
     var app = express();
-    app.use('/api', mock('./test/mocks'));
+    app.use('/api', mock(path.join(__dirname, 'mocks')));
 
     it('page /', function (done) {
       request(app)
@@ -39,11 +40,18 @@ describe('express mockjs test:', function () {
         .expect(200, /^\{"code":\d,"data":\{"list":\[\{"id":\d,"name":/, done);
     });
 
-    it('page /user-1', function (done) {
+    it('page /user', function (done) {
       request(app)
-        .get('/api/user-1')
+        .get('/api/user')
         .expect('Content-Type', /json/)
-        .expect(200, /^\{"code":\d,"data":\{"id":\d,"name":/, done);
+        .expect(200, { code: -1, msg: 'no uid' }, done);
+    });
+
+    it('page /user?uid=123', function (done) {
+      request(app)
+        .get('/api/user?uid=123')
+        .expect('Content-Type', /json/)
+        .expect(200, /^\{"code":0,"data":\{"uid":123,"name":/, done);
     });
 
     it('page /other-list', function (done) {
@@ -66,7 +74,8 @@ describe('express mockjs test:', function () {
 
     it('defaults path / and post method', function (done) {
       var app = express();
-      app.use(mock('./test/mocks'));
+      app.use(mock(path.join(__dirname, 'mocks')));
+      mock.debug = true;
 
       setTimeout(function () {
         request(app)
@@ -80,7 +89,7 @@ describe('express mockjs test:', function () {
       mock.debug = false;
 
       var app = express();
-      app.use('/test', mock('./test/mocks'));
+      app.use('/test', mock(path.join(__dirname, 'mocks')));
 
       setTimeout(function () {
         request(app)

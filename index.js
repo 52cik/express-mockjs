@@ -1,66 +1,86 @@
 var fs = require('fs');
 var path = require('path');
+
+var ejs = require('ejs');
 var Mock = require('mockjs');
 var walkdir = require('node-walkdir');
 
-var RE = /^\s*\/\*[*\s]+?([^\r\n]+)[\s\S]+?@url\s+(\/[^\n]+)[\s\S]+?\*\//im;
+
+var tplDoc = ejs.compile(fs.readFileSync(path.join(__dirname, 'doc.ejs'), 'utf8'));
+var RE = /^\s*\/\*[*\s]+?([^\r\n]+)[\s\S]+?@url\s+([^\n]+)[\s\S]+?\*\//im;
+
 
 function mock(dir) {
-  var route = {}; // route list
-  var docs = {}; // document list
+  var routes = {}; // routes list
 
-  walkdir(dir, ['.js', '.json'], function (filename) {
-    var content = String(fs.readFileSync(filename, 'utf8')).trim() || '{}';
+  walkdir(dir, /\.js(on)?$/i, function (filepath) {
+    var content = String(fs.readFileSync(filepath, 'utf8')).trim() || '{}';
 
-    var url = filename;
-    var doc = '[Mock Warn]: file "' + filename + '" no description!';
+    var url = filepath;
+    var describe = 'no description';
 
     var m = content.match(RE);
 
     if (m) {
       url = m[2].trim();
-      doc = m[1].replace(/(^[\s*]+|[\s*]+$)/g, '');
-    }
-
-    if (mock.debug && route[url]) {
-      console.warn('[Mock Warn]: [' + filename + ': ' + url + '] already exists and has been covered with new data.');
+      describe = m[1].replace(/(^[\s*]+|[\s*]+$)/g, '');
     }
 
     if (url[0] !== '/') { // fix url path
       url = '/' + url;
     }
 
-    docs[url] = doc;
+    var pathname = url;
+    if (pathname.indexOf('?') > -1) {
+      pathname = pathname.split('?')[0];
+    }
 
-    try {
-      var json = new Function('return (' + content + ')')();
+    if (mock.debug && routes[pathname]) {
+      console.warn('[Mock Warn]: [' + filepath + ': ' + pathname + '] already exists and has been covered with new data.');
+    }
 
-      route[url] = json;
-    } catch (e) {
-      delete route[url];
-      delete docs[url];
-      mock.debug && console.warn('[Mock Warn]: ', e);
+    routes[pathname] = {
+      url: url,
+      filepath: filepath,
+      describe: describe,
+    };
+
+    var data = {};
+
+    if (/\.js$/.test(filepath)) {
+      routes[pathname].data = require(filepath);
+    } else {
+      try {
+        routes[pathname].data = new Function('return (' + content + ')')();
+      } catch (e) {
+        delete routes[pathname];
+        mock.debug && console.warn('[Mock Warn]:', e);
+      }
     }
   });
 
+
   return function (req, res) {
     var url = req.url.split('?')[0];
+    var route = routes[url];
+    var data = (route || 0).data;
 
-    if (route[url]) {
-      res.json(Mock.mock(route[url]));
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+    res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
+
+    if (data) {
+      if (typeof data === 'function') {
+        data = data(req);
+      }
+      res.json(Mock.mock(data));
     } else {
-      var host = '//' + req.headers.host + req.baseUrl;
-
-      var html = ['<ol>'];
-      Object.keys(docs).sort().forEach(function (key) {
-        html.push('<li><a href=' + (host + key) + '>' + docs[key] + '</a></li>');
-      });
-      html.push('</ol>');
-
-      res.type('html').end(html.join(''));
+      var host = req.protocol + '://' + req.headers.host + req.baseUrl;
+      res.type('html').end(tplDoc({ host: host, routes: routes }));
     }
   };
 }
 
 mock.debug = false;
+
 module.exports = mock;
