@@ -68,6 +68,12 @@ describe('express mockjs test:', function () {
         .expect(200, /^\{"code":\d,"data":\{"id":\d,"title":/, done);
     });
 
+    it('page /the-api-not-fond', function (done) {
+      request(app)
+        .get('/api/the-api-not-fond')
+        .expect(404, done);
+    });
+
   });
 
   describe('Functional testing.', function () {
@@ -85,20 +91,16 @@ describe('express mockjs test:', function () {
       }, 9);
     });
 
-    it('Interface does not exist then returns a API list', function (done) {
-      mock.debug = false;
-
+    it('api document page', function (done) {
       var app = express();
       app.use('/test', mock(path.join(__dirname, 'mocks')));
 
       setTimeout(function () {
         request(app)
-          .get('/test/123')
-          .expect('Content-Type', /html/)
-          .expect(200, /\/[\w-]+/, done);
+          .get('/test')
+          .expect(200, /Express Mock Server/, done);
       }, 9);
     });
-
   });
 
 });

@@ -6,7 +6,7 @@ var Mock = require('mockjs');
 var walkdir = require('node-walkdir');
 
 
-var tplDoc = ejs.compile(fs.readFileSync(path.join(__dirname, 'doc.ejs'), 'utf8'));
+var template = ejs.compile(fs.readFileSync(path.join(__dirname, 'doc.ejs'), 'utf8'));
 var RE = /^\s*\/\*[*\s]+?([^\r\n]+)[\s\S]+?@url\s+([^\n]+)[\s\S]+?\*\//im;
 
 
@@ -45,8 +45,6 @@ function mock(dir) {
       describe: describe,
     };
 
-    var data = {};
-
     if (/\.js$/.test(filepath)) {
       routes[pathname].data = require(filepath);
     } else {
@@ -60,27 +58,31 @@ function mock(dir) {
   });
 
 
-  return function (req, res) {
+  return function (req, res, next) {
     var url = req.url.split('?')[0];
-    var route = routes[url];
-    var data = (route || 0).data;
 
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'X-Requested-With');
-    res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
+    if (url === '/') { // api document page
+      var host = req.protocol + '://' + req.headers.host + req.baseUrl;
+      return res.end(template({ host: host, routes: routes }));
+    }
+
+    var data = (routes[url] || 0).data;
 
     if (data) {
       if (typeof data === 'function') {
         data = data(req);
       }
+
+      res.set('Access-Control-Allow-Origin', '*');
+      res.set('Access-Control-Allow-Headers', 'X-Requested-With');
+      res.set('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
+
       res.json(Mock.mock(data));
     } else {
-      var host = req.protocol + '://' + req.headers.host + req.baseUrl;
-      res.type('html').end(tplDoc({ host: host, routes: routes }));
+      next();
     }
   };
 }
 
 mock.debug = false;
-
 module.exports = mock;
