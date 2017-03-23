@@ -1,6 +1,6 @@
 # express-mockjs
 
-> express mockjs api server
+> express mockjs api 服务器
 
 [![Linux Build][travis-image]][travis-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
@@ -9,19 +9,17 @@
 [![license MIT][license-image]][license-url]
 
 
-[中文文档](README_CN.md)
 
+## 如何使用
 
-## How to use it
-
-### Installation
+### 安装
 
 ``` sh
 $ npm install --save-dev express-mockjs
 ```
 
 
-### Examples
+### 例子
 
 ``` js
 var path = require('path')
@@ -30,29 +28,29 @@ var mockjs = require('express-mockjs')
 
 var app = express()
 
-// Using the default path /
-app.use(mockjs(path.join(__dirname, 'mocks')))
+// 使用默认路径（不推荐） /
+// app.use(mockjs(path.join(__dirname, 'mocks')))
 
-// or custom path /api
+// 自定义路径 /api
 app.use('/api', mockjs(path.join(__dirname, 'mocks')))
 
-// Add your middleware here, etc.
+// 这里可以添加你的自定义代码.
 
 app.listen(3000);
 ```
 
-You can then access the <http://localhost:3000/api> to view API documents.
+然后你可以访问 <http://localhost:3000/api> 查看API文档。
 
-**Recommended using [nodemon][nodemon] to monitor auto restart services**
-
-
-### Mock JSON
-
-* [Mock.js 0.1 doc](https://github.com/nuysoft/Mock/wiki)  
-* [Mock Sample](http://mockjs.com/examples.html)  
+**推荐使用 [nodemon][nodemon] 监视自动重启服务**
 
 
-### Examples
+### Mock JSON 文档
+
+* [Mock.js 0.1 文档](https://github.com/nuysoft/Mock/wiki)  
+* [Mock 例子](http://mockjs.com/examples.html)  
+
+
+### 例子
 
 ```
 .
@@ -70,21 +68,24 @@ You can then access the <http://localhost:3000/api> to view API documents.
 
 ## data.json
 
-`Mock JSON` here is not a real JSON file, and more like a JS file, so you want to use the following format.
+`Mock JSON` 不是一个真正的 JSON 文件, 更像是 JS 文件, 所以你可以发挥你的想象了。
 
-> Hypothetical file in 'mocks/home/test.json'
+> 假设我们有个文件 'mocks/home/test.json' 内容为:
 
 ``` js
 /**
- * Interface function description
+ * 接口描述
  *
  * @url /api-access-path
  *
- * Parameter description and other instructions.
- * uid: user ID
- * name: username
- * email: the email
- * etc.
+ * GET: 请求方法及参数
+ *   uid 这是请求的用户ID
+ *
+ * 参数描述和其他说明。
+ * uid: 用户ID
+ * name: 用户名
+ * email: 邮箱
+ * 等等其他描述.
  */
 
 {
@@ -92,29 +93,28 @@ You can then access the <http://localhost:3000/api> to view API documents.
   "result|5": [
     {
       "uid|+1": 1,
-      "name": "@name",
+      "name": "@cname",
       "email": "@email"
     }
   ]
 }
 ```
 
-Then you can access the <http://localhost:3000/api/api-access-path> through the browser.
+然后你可以访问 <http://localhost:3000/api/api-access-path> 查看实际效果.
 
-Of course, you can also use the JS file directly.
+当然，你也可以直接使用js文件书写。
 
 ``` js
 /**
- * home page links
+ * 首页 - 友情链接
  *
  * @url /home-links
  *
- * Here you can write a detailed description
- * of the parameters of the information.
+ * 在这里你可以写详细的说明参数的信息
  */
 
 module.exports = {
-  "code": function () { // simulation error code, 1/10 probability of error code 1.
+  "code": function () { // 1/10 的概率返回错误码 1.
     return Math.random() < 0.1 ? 1 : 0;
   },
   "list|5-10": [
@@ -123,36 +123,36 @@ module.exports = {
 };
 ```
 
-Or export function.
+或者直绑定函数：
 
 ``` js
 /**
- * user page - user info
+ * 用户页面 - 用户信息
  *
  * @url /user?uid=233
  *
- * GET: Request method and parameter
- *   uid This is the requested userID
+ * GET: 请求方法及参数
+ *   uid 这是请求的用户ID
  *
- * Here you can write a detailed description
- * of the parameters of the information.
+ * 在这里你可以写详细的说明参数的信息
  */
 
 module.exports = function (req) {
+  // express 的 req 对象
   var uid = req.query.uid;
 
-  if (!uid) {
+  if (!uid) { // 当没有用户ID时返回错误信息
     return {
       code: -1,
       msg: 'no uid',
     }
   }
 
-  return {
+  return { // 返回mock的用户信息，但用户id固定
     code: 0,
     data: {
       "uid": +uid,
-      "name": "@name",
+      "name": "@cname",
       "age|20-30": 1,
       "email": "@email",
       "date": "@date",
