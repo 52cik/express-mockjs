@@ -59,6 +59,14 @@ function mock(dir) {
 
 
   return function (req, res, next) {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.set('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
+
+    if (req.method === 'OPTIONS') {
+      return res.send('');
+    }
+
     var url = req.url.split('?')[0];
 
     if (url === '/') { // api document page
@@ -72,11 +80,6 @@ function mock(dir) {
       if (typeof data === 'function') {
         data = data(req);
       }
-
-      res.set('Access-Control-Allow-Origin', '*');
-      res.set('Access-Control-Allow-Headers', 'X-Requested-With');
-      res.set('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
-
       res.json(Mock.mock(data));
     } else {
       next();
