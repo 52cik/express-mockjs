@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="renderer" content="webkit" />
+  <title>API Document List - Express Mock Server</title>
+  <link href="http://lib.baomitu.com/bulma/0.5.1/css/bulma.min.css" rel="stylesheet">
+  <link href="http://lib.baomitu.com/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet">
+  <link href="http://lib.baomitu.com/highlight.js/9.12.0/styles/rainbow.min.css" rel="stylesheet">
+  <style>
+  body,html{height:100%;}
+  .main{height:calc(100% - 157px);}
+  .main>.columns{height:100%;}
+  .sidebar{overflow:auto;background-color:#eee;}
+  .search-bar{border-bottom:1px solid #e8e8e8;}
+  .docs{overflow:auto;background-color:#474949;}
+  .docs .notification{margin-bottom:0;white-space:nowrap;}
+  .docs pre{margin:0;padding:0;background-color:inherit;}
+  .docs .hljs-ln-numbers{padding-right:.5em;min-width:26px;text-align:right;}
+  [v-cloak]{display:none;}
+  </style>
+</head>
+<body>
+  <section class="hero is-dark">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <p class="title">Express Mock Server</p>
+        <p class="subtitle">API document management platform.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="app" class="main" v-cloak>
+    <div class="columns is-mobile is-gapless">
+      <div class="column is-one-quarter sidebar">
+        <p class="notification is-radiusless search-bar">
+          <input class="input" type="text" placeholder="Type to search" v-model="searchQuery">
+        </p>
+        <aside class="menu">
+          <ul class="menu-list">
+            <li v-for="it of filteredDocs" :key="it.file" @click="showConetnt(it)">
+              <a :class="{'is-active': menuActiveItem.file === it.file}">{{it.title}}</a>
+            </li>
+          </ul>
+        </aside>
+      </div>
+
+      <div class="column docs">
+        <div v-if="showInfos" class="notification is-primary is-radiusless">
+          <p><strong>FILE:</strong> {{menuActiveItem.file}}</p>
+          <p>
+            <strong>URL:</strong> <a :href="menuActiveItem.url" target="_blank">{{menuActiveItem.url}}</a>
+          </p>
+        </div>
+        <div v-else class="notification is-info">
+          <p>No data can be displayed, please click on the left menu.</p>
+        </div>
+
+        <pre><code ref="docsContent" class="hljs json"></code></pre>
+      </div>
+    </div>
+  </section>
+
+<script src="http://lib.baomitu.com/vue/2.4.2/vue.min.js"></script>
+<script src="http://lib.baomitu.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="http://lib.baomitu.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="http://lib.baomitu.com/highlightjs-line-numbers.js/2.0.0/highlightjs-line-numbers.js"></script>
+<script>
+(function() {
+  var app = new Vue({
+    el: '#app',
+
+    data: {
+      // search key
+      searchQuery: '',
+
+      // select item
+      menuActiveItem: {},
+
+      // menu list
+      menuList: [
+        // { title: '', url: '', file: '' },
+      ],
+    },
+
+    computed: {
+      // show api file/url info
+      showInfos: function() {
+        return typeof this.menuActiveItem.file === 'string';
+      },
+
+      // search doc by regexp
+      filteredDocs: function () {
+        var self = this;
+
+        if (self.searchQuery === '') {
+          return self.menuList;
+        }
+
+        var searchRegex = new RegExp(self.searchQuery, 'i');
+
+        return self.menuList.filter(function (it) {
+          return (
+            searchRegex.test(it.title) ||
+            searchRegex.test(it.url) || 
+            searchRegex.test(it.file)
+          );
+        });
+      },
+    },
+
+    methods: {
+      // get ajax content
+      showConetnt: function(it, idx) {
+        var that = this;
+        that.menuActiveItem = it;
+
+        $.get(it.url, function (data) {
+          var docsContent = that.$refs.docsContent;
+          var ret = hljs.highlight('json', JSON.stringify(data, null, '  '), true);
+          docsContent.innerHTML = ret.value;
+          hljs.lineNumbersBlock(docsContent);
+        }, 'json');
+      },
+    },
+  });
+
+  // ejs output
+  app.menuList = @menuList;
+})();
+</script>
+</body>
+</html>

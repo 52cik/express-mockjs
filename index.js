@@ -1,12 +1,10 @@
 var fs = require('fs');
 var path = require('path');
 
-var ejs = require('ejs');
 var Mock = require('mockjs');
 var walkdir = require('node-walkdir');
 
-
-var template = ejs.compile(fs.readFileSync(path.join(__dirname, 'doc.ejs'), 'utf8'));
+var template = fs.readFileSync(path.join(__dirname, 'doc.html'), 'utf8');
 var RE = /^\s*\/\*[*\s]+?([^\r\n]+)[\s\S]+?@url\s+([^\n]+)[\s\S]+?\*\//im;
 
 
@@ -71,7 +69,17 @@ function mock(dir) {
 
     if (url === '/') { // api document page
       var host = req.protocol + '://' + req.headers.host + req.baseUrl;
-      return res.end(template({ host: host, routes: routes }));
+
+      var list = Object.keys(routes).sort().map(function (path) {
+        var route = routes[path];
+        return {
+          title: route.describe,
+          url: host + route.url,
+          file: route.filepath,
+        };
+      });
+
+      return res.end(template.replace('@menuList', JSON.stringify(list)));
     }
 
     var data = (routes[url] || 0).data;
