@@ -8,9 +8,7 @@
  */
 
 module.exports = {
-  "code": function () { // simulation error code, 1/10 probability of error code 1.
-    return Math.random() < 0.1 ? 1 : 0;
-  },
+  "code|10": 1, // simulation error code, 1/10 probability of error code 1.
   "list|5-10": [
     {"title": "@title", "link": "@url"}
   ]

@@ -30,7 +30,7 @@ describe('express mockjs test:', function () {
       request(app)
         .get('/api/home-links')
         .expect('Content-Type', /json/)
-        .expect(200, /^\{"list":\[\{"title":"[^"]+","link":"[^"]+"\}/, done);
+        .expect(200, /^\{"code":[01],"list":\[\{"title":"[^"]+","link":"[^"]+"\}/, done);
     });
 
     it('page /user-list', function (done) {
