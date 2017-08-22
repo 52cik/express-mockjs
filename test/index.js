@@ -103,4 +103,13 @@ describe('express mockjs test:', function () {
     });
   });
 
+  describe('OPTIONS', function () {
+    it('OPTIONS', function (done) {
+      var app = express();
+      app.use('/test', mock(path.join(__dirname, 'mocks')));
+      request(app)
+        .options('/test')
+        .expect(200, done);
+    });
+  });
 });

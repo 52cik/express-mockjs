@@ -1,8 +1,11 @@
 var fs = require('fs');
 var path = require('path');
 
-var Mock = require('mockjs-lite').Mock;
+var MockLite = require('mockjs-lite');
 var walkdir = require('node-walkdir');
+
+var Mock = MockLite.Mock;
+var Random = MockLite.Random;
 
 var template = fs.readFileSync(path.join(__dirname, 'doc.html'), 'utf8');
 var RE = /^\s*\/\*[*\s]+?([^\r\n]+)[\s\S]+?@url\s+([^\n]+)[\s\S]+?\*\//im;
@@ -86,7 +89,7 @@ function mock(dir) {
 
     if (data) {
       if (typeof data === 'function') {
-        data = data(req);
+        data = data(req, Mock, Random);
       }
       res.json(Mock.mock(data));
     } else {
