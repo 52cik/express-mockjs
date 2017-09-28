@@ -1,6 +1,6 @@
 {
   "name": "express-mockjs",
-  "version": "0.4.6",
+  "version": "0.4.8",
   "description": "express mockjs",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/52cik/express-mockjs#readme",
   "dependencies": {
-    "mockjs-lite": "^0.3.0",
+    "mockjs-lite": "^0.3.2",
     "node-walkdir": "^0.1.0"
   },
   "devDependencies": {
