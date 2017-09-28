@@ -4,7 +4,7 @@ var path = require('path');
 var MockLite = require('mockjs-lite');
 var walkdir = require('node-walkdir');
 
-var Mock = MockLite.Mock;
+var Mock = MockLite;
 var Random = MockLite.Random;
 
 var template = fs.readFileSync(path.join(__dirname, 'doc.html'), 'utf8');
