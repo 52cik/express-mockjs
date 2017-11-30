@@ -61,8 +61,12 @@ function mock(dir) {
 
   return function (req, res, next) {
     res.set('Access-Control-Allow-Origin', '*');
-    res.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.set('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
+    res.set('Access-Control-Allow-Methods', 'GET,HEAD,PUT,POST,DELETE,PATCH');
+
+    var allowedHeaders = req.headers['access-control-request-headers'];
+    if (allowedHeaders) {
+      res.set('Access-Control-Allow-Headers', allowedHeaders);
+    }
 
     if (req.method === 'OPTIONS') {
       return res.send('');

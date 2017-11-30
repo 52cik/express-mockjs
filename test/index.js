@@ -111,5 +111,15 @@ describe('express mockjs test:', function () {
         .options('/test')
         .expect(200, done);
     });
+
+    it('Custom header', function (done) {
+      var app = express();
+      app.use('/test', mock(path.join(__dirname, 'mocks')));
+      request(app)
+        .options('/test')
+        .set('Access-Control-Request-Headers', 'xCustom,haha')
+        .expect('Access-Control-Allow-Headers', 'xCustom,haha')
+        .expect(200, done);
+    });
   });
 });
