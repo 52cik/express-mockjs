@@ -31,10 +31,10 @@ var mockjs = require('express-mockjs')
 
 var app = express()
 
-// 使用默认路径（不推荐） /
+// 使用默认路径 '/'（不推荐）
 // app.use(mockjs(path.join(__dirname, 'mocks')))
 
-// 自定义路径 /api
+// 自定义路径 '/api'
 app.use('/api', mockjs(path.join(__dirname, 'mocks')))
 
 // 这里可以添加你的自定义代码.
@@ -42,7 +42,7 @@ app.use('/api', mockjs(path.join(__dirname, 'mocks')))
 app.listen(3000);
 ```
 
-2. 在 `api-server` 下创建 `mocks` 目录，然后创建 `data.json` 内容如下:
+2. 在 `api-server` 下创建 `mocks` 目录，然后创建 `test.json` 内容如下:
 
 ```js
 /**
@@ -62,7 +62,7 @@ app.listen(3000);
 }
 ```
 
-3. 安装依赖
+3. 安装依赖模块
 
 ```sh
 $ npm i -S express express-mockjs
@@ -72,6 +72,8 @@ $ npm i -S express express-mockjs
 
 ```sh
 $ node app.js
+# 或者
+$ nodemon app.js
 ```
 
 > 然后你可以访问 <http://localhost:3000/api> 查看API文档。
