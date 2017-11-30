@@ -71,7 +71,7 @@ $ npm i -S express express-mockjs
 4. 启动
 
 ```sh
-$ node.app.js
+$ node app.js
 ```
 
 > 然后你可以访问 <http://localhost:3000/api> 查看API文档。
