@@ -1,6 +1,6 @@
 # express-mockjs
 
-> express mockjs api 服务器
+> express mockjs api 服务中间件
 
 [![Linux Build][travis-image]][travis-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
@@ -83,7 +83,7 @@ $ node app.js
 ### Mock JSON 文档
 
 * [Mock.js 0.1 文档](https://github.com/nuysoft/Mock/wiki)  
-* [Mock 例子](http://mockjs.com/examples.html)  
+* [Mock 例子](http://mockjs-lite.js.org/docs/examples.html)  
 
 
 ### 例子

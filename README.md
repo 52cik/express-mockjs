@@ -1,6 +1,6 @@
 # express-mockjs
 
-> express mockjs api server
+> express mockjs api middleware for Express
 
 [![Linux Build][travis-image]][travis-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
@@ -20,8 +20,12 @@
 $ npm install --save-dev express-mockjs
 ```
 
+----
 
-### Examples
+### Quick start
+
+
+1. Create a directory `api-server`, then create the file `app.js`, the content is：
 
 ``` js
 var path = require('path')
@@ -30,26 +34,61 @@ var mockjs = require('express-mockjs')
 
 var app = express()
 
-// Using the default path /
-app.use(mockjs(path.join(__dirname, 'mocks')))
+// Use the default path '/' (Not recommended)
+// app.use(mockjs(path.join(__dirname, 'mocks')))
 
-// or custom path /api
+// Use a custom path '/api'
 app.use('/api', mockjs(path.join(__dirname, 'mocks')))
 
-// Add your middleware here, etc.
+// Here you can add any code.
 
 app.listen(3000);
 ```
 
-You can then access the <http://localhost:3000/api> to view API documents.
+2. Create a `mocks` directory under `api-server` and create `data.json` as follows:
+
+```js
+/**
+ * api interface description
+ *
+ * @url /test-api
+ */
+{
+  "code": 0,
+  "result|5": [
+    {
+      "uid|+1": 1,
+      "name": "@name",
+      "email": "@email"
+    }
+  ]
+}
+```
+
+3. Install dependent modules
+
+```sh
+$ npm i -S express express-mockjs
+```
+
+4. Start
+
+```sh
+$ node app.js
+# or
+$ nodemon app.js
+```
+
+> You can then access the <http://localhost:3000/api> to view API documents.
 
 **Recommended using [nodemon][nodemon] to monitor auto restart services**
 
+----
 
 ### Mock JSON
 
 * [Mock.js 0.1 doc](https://github.com/nuysoft/Mock/wiki)  
-* [Mock Sample](http://mockjs.com/examples.html)  
+* [Mock Sample](http://mockjs-lite.js.org/docs/examples.html)  
 
 
 ### Examples
