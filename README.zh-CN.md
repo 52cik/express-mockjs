@@ -18,8 +18,11 @@
 $ npm install --save-dev express-mockjs
 ```
 
+----
 
-### 例子
+### 快速开始
+
+1. 创建目录 `api-server` 然后创建 `app.js` 内容如下：
 
 ``` js
 var path = require('path')
@@ -39,10 +42,43 @@ app.use('/api', mockjs(path.join(__dirname, 'mocks')))
 app.listen(3000);
 ```
 
-然后你可以访问 <http://localhost:3000/api> 查看API文档。
+2. 在 `api-server` 下创建 `mocks` 目录，然后创建 `data.json` 内容如下:
+
+```js
+/**
+ * 接口描述
+ *
+ * @url /test-api
+ */
+{
+  "code": 0,
+  "result|5": [
+    {
+      "uid|+1": 1,
+      "name": "@cname",
+      "email": "@email"
+    }
+  ]
+}
+```
+
+3. 安装依赖
+
+```sh
+$ npm i -S express express-mockjs
+```
+
+4. 启动
+
+```sh
+$ node.app.js
+```
+
+> 然后你可以访问 <http://localhost:3000/api> 查看API文档。
 
 **推荐使用 [nodemon][nodemon] 监视自动重启服务**
 
+----
 
 ### Mock JSON 文档
 
@@ -53,7 +89,7 @@ app.listen(3000);
 ### 例子
 
 ```
-.
+api-server
 ├── mocks
     ├── home
     ⎪   ├── data.json

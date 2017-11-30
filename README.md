@@ -9,7 +9,7 @@
 [![license MIT][license-image]][license-url]
 
 
-[中文文档](README_CN.md)
+[中文文档](README.zh-CN.md)
 
 
 ## How to use it
